@@ -1,6 +1,8 @@
 # Classification-with-Anisotropic-Diffusion
-The change in classification with the change of the diffusion coefficient of anisotropic diffusion and isotropic diffusion..
+The change in classification with the change of the diffusion coefficient of anisotropic diffusion and isotropic diffusion.
+
 Require torch, kornia
+
 ## Anisotropic Diffusion VS Isotropic Diffusion VS Original
 ### 1. Anisotropic Diffusion
 1) Train Auto Encoder for Anisotropic Diffusion. (Total variation regularization)
