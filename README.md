@@ -7,7 +7,7 @@ The change in classification with the change of the diffusion coefficient of ani
 2) Get the classification loss and classification score per diffusion coefficient.
 3) Get the class activation map (CAM or Grad-CAM) per diffusion coefficient.
 ### 2. Isotropic Diffusion
-1) Train Auto Encoder for Anisotropic Diffusion. (Laplace regularization)
+1) Train Auto Encoder for Isotropic Diffusion. (Laplace regularization)
 2) Get the classification loss and classification score per diffusion coefficient.
 3) Get the class activation map (CAM or Grad-CAM) per diffusion coefficient.
 ### 3. Original
