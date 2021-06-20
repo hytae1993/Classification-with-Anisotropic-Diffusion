@@ -1,29 +1,29 @@
 import torch
 import numpy as np
-import torch.nn as nn
+import os
 
-def get_image(input, encoder, maskDecoder):
+def get_diffused_image(input, encoder, decoder):
     """
     Get the mask
     :param input: input image
     :param encoder: encoder
-    :param maskDecoder: decoder
-    :return mask: the mask which bi-partition the input image to the foregroun and the background
+    :param decoder: decoder
+    :return image: diffused image
     """
     with torch.no_grad():
         block, bottleNeck = encoder(input)  # autoencoder
-        mask,_ = maskDecoder(block, bottleNeck)
-        mask = mask.cpu()
+        image,_ = decoder(block, bottleNeck)
+        image = image.cpu()
 
-        return mask
+        return image
 
-def get_threshold_mask(mask):
-    """
-    Threshold the mask based on 0.5.
-    :param mask: input mask
-    :return: thresholded mask
-    """
-    with torch.no_grad():
-        out = (mask>0.5).float()
-    
-    return out
+def save_diffusion_model(encoder, decoder, config):
+    path = './savedModel/'
+    aniso_path = os.path.join(path, config.diffusion, str(config.diffusionCoeff))
+    try: 
+        torch.save(encoder.state_dict(), os.path.join(aniso_path, 'encoder'))
+        torch.save(decoder.state_dict(), os.path.join(aniso_path, 'decoder'))
+    except FileNotFoundError:
+        os.makedirs(aniso_path)
+        torch.save(encoder.state_dict(), os.path.join(aniso_path, 'encoder'))
+        torch.save(decoder.state_dict(), os.path.join(aniso_path, 'decoder'))

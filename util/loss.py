@@ -7,21 +7,34 @@ import numpy as np
 
 class Loss: 
     
-    def __init__(self):
-        self.area_loss_coef = 8
-        self.smoothness_loss_coef = 0.5
-        self.preserver_loss_coef = 0.3
-        self.area_loss_power = 0.3
-    
     def tv(self, image):
+        '''
+        Total variation of image. L-1 norm of first derivative of image.
+        First derivative of image is calucalted by forward difference.
+        :param image: input image
+        :return: total variation value of image
+        '''
         x_loss = torch.mean((torch.abs(image[:,:,1:,:] - image[:,:,:-1,:])))
         y_loss = torch.mean((torch.abs(image[:,:,:,1:] - image[:,:,:,:-1])))
 
         return (x_loss + y_loss)
+    
+    def laplace(self, image):
+        '''
+        Laplace calculation of image. Laplace is second derivative of image.
+        Second derivative of the image is calculated by 'forward difference - backward difference'
+        :param image: input image
+        :return: mean value of Laplace of image
+        '''
+        x_forward = image[:,:,1:,:] - image[:,:,:-1,:]
+        x_backward = image[:,:,:-1,:] - image[:,:,1:,:]
+        x_loss = torch.mean(x_forward - x_backward)
 
-    def regionLoss(self, image):
-        mask_mean = F.avg_pool2d(image, image.size(2), stride=1).squeeze().mean()
+        y_forward = image[:,:,:,1:] - image[:,:,:,:-1]
+        y_backward = image[:,:,:,:-1] - image[:,:,:,1:]
+        y_loss = torch.mean(y_forward - y_backward)
 
-        return mask_mean
+        return (x_loss + y_loss)
+
 
     

@@ -11,6 +11,8 @@ import numpy as np
 
 import random
 
+from diffusion import diffusor
+
 # ===========================================================
 # Training settings
 # ===========================================================
@@ -27,7 +29,10 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 # model configuration
 parser.add_argument('--model', '-m', type=str, default='diffusion', help='choose which model is going to use')
 parser.add_argument('--size', type=int, default=224, help='image size for resize')
+parser.add_argument('--diffusion', type=str, default='anisotropic', help='which diffusion')
+parser.add_argument('--diffusionCoeff', '-dc', type=float, default=0.001, help='diffusion coefficient')
 parser.add_argument('--num', type=int, default=10, help='number of classes')
+parser.add_argument('--title', type=str, default='anisotropic_diffusion')
 
 args = parser.parse_args()
 
@@ -50,21 +55,21 @@ class main:
         transform = transforms.Compose([
             transforms.Resize(args.size),
             transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ])
         
-        trainset = torchvision.datasets.STL10(root='./data', split='train', download=True, transform=transform)
-        testset = torchvision.datasets.STL10(root='./data', split='test', download=True, transform=transform)
+        trainset = torchvision.datasets.STL10(root='../../../dataset/stl10', split='train', download=True, transform=transform)
+        testset = torchvision.datasets.STL10(root='../../../dataset/stl10', split='test', download=True, transform=transform)
 
         self.train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batchSize, shuffle=True)
         self.val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batchSize, shuffle=False)
 
-
-
     def modelCall(self):
         
-        if args.model == 'diffusion':          # autoencoder
-            self.model = diffusion(args, self.train_loader, self.val_loader, num_class=args.num)
+        if args.model == 'diffusion':          # anisotropic and isotropic diffusion auto-encoder
+            self.model = diffusor(args, self.train_loader, self.val_loader, args.diffusion)
+        elif args.model == 'classification':
+            pass
 
 if __name__ == '__main__':
     os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   
