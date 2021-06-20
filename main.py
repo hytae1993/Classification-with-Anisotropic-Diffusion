@@ -32,7 +32,7 @@ parser.add_argument('--model', '-m', type=str, default='diffusion', help='choose
 parser.add_argument('--size', type=int, default=224, help='image size for resize')
 parser.add_argument('--diffusion', type=str, default='anisotropic', help='which diffusion')
 parser.add_argument('--diffusionCoeff', '--dc', type=float, default=0.001, help='diffusion coefficient')
-parser.add_argument('--classifier', type=str, default='Res18', help='which classifier')
+parser.add_argument('--classifier', type=str, default='ResNet18', help='which classifier')
 parser.add_argument('--num_classes', type=int, default=10, help='number of classes')
 parser.add_argument('--title', type=str, default='anisotropic_diffusion')
 
@@ -63,8 +63,8 @@ class main:
         trainset = torchvision.datasets.STL10(root='../../../dataset/stl10', split='train', download=True, transform=transform)
         testset = torchvision.datasets.STL10(root='../../../dataset/stl10', split='test', download=True, transform=transform)
 
-        self.train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batchSize, shuffle=True)
-        self.val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batchSize, shuffle=False)
+        self.train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batchSize, shuffle=True, num_workers=2)
+        self.val_loader = torch.utils.data.DataLoader(testset, batch_size=args.batchSize, shuffle=False, num_workers=2)
 
     def modelCall(self):
         

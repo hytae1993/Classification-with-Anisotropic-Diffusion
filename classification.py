@@ -5,8 +5,7 @@ import math
 
 import torch
 import torch.backends.cudnn as cudnn
-import torchvision
-from torchvision.utils import save_image
+from  torchvision import transforms
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -14,15 +13,16 @@ import torchvision.models as models
 
 from model.Vgg import Encoder, Decoder
 from model.vggClassifier import vgg19_bn, vgg19, vgg16_bn, vgg16
-from model.resNetClassifier import ResNet18, ResNet50
+from model.resNetClassifier import ResNet18, ResNet34
 from util.loss import Loss
 from util.progress_bar import progress_bar
 from util.scheduler_learning_rate import *
 from util.utils import *
+import kornia
 
 import numpy as np
 
-from plot.plotDiffusion import diffusionPlot
+from plot.plotClassification import classificationPlot
 
 class classification(object):
     def __init__(self, config, training_loader, val_loader, diffusion):
@@ -75,13 +75,30 @@ class classification(object):
             self.classifier = vgg16_bn(pretrained=False, num_classes=self.config.num_classes)
         elif self.config.classifier == 'ResNet18':
             self.classifier = ResNet18(num_classes=self.config.num_classes)
-        elif self.config.classifier == 'ResNet50':
-            self.classifier = ResNet50(num_classes=self.config.num_classes)
+        elif self.config.classifier == 'ResNet34':
+            self.classifier = ResNet34(num_classes=self.config.num_classes)
         self.classifier = self.classifier.to(self.device)
 
-        self.plot = diffusionPlot(self.train_loader, self.val_loader, self.encoder, self.decoder, self.device, self.config)
+        self.plot = classificationPlot(self.train_loader, self.val_loader, self.encoder, self.decoder, self.classifier, self.device, self.config)
         self.crossCriterion = torch.nn.CrossEntropyLoss().to(self.device)
         self.optimizer['classifier'] = torch.optim.SGD(self.classifier.parameters(), lr=self.lr, weight_decay=1e-4)
+
+    def diffuseData(self, data, epoch):
+        # if using diffused image with constant diffused image
+        if self.config.diffusion == 'anisotropic' or self.config.diffusion == 'isotropic':
+            encoderBlock, bottleNeck = self.encoder(data)
+            diffusedImage, _ = self.decoder(blocks=encoderBlock, bottleNeck=bottleNeck)  
+
+        # if using diffused image with annealing diffusion coefficient
+        elif self.config.diffusion == 'annealing':
+            with torch.no_grad():
+                diffusedImage = kornia.gaussian_blur2d(data, kernel_size=(3,3), sigma=(1,1))
+        
+        # if using original image
+        elif self.config.diffusion == 'original':
+            diffusedImage = data
+
+        return diffusedImage
 
     def run(self, epoch, data_loader, work):
         if work == 'train':
@@ -102,22 +119,9 @@ class classification(object):
             target = target.to(self.device)
 
             if work == 'train':
-                # if using diffused image with constant diffused image
-                if self.config.diffusion == 'anisotropic' or self.config.diffusion == 'isotropic':
-                    encoderBlock, bottleNeck = self.encoder(data)
-                    data, _ = self.decoder(blocks=encoderBlock, bottleNeck=bottleNeck)  
+                diffusedImage = self.diffuseData(data, epoch)
 
-                # if using diffused image with annealing diffusion coefficient
-                elif self.config.diffusion == 'annealing':
-                    conv = nn.Conv2d(bias=False)
-                    with torch.no_grad():
-                         pass
-                
-                # if using original image
-                elif self.config.diffusion == 'original':
-                    data = data
-
-                classScore, features = self.classifier(data)
+                classScore, _ = self.classifier(diffusedImage)
 
                 loss = self.crossCriterion(classScore, target)
 
@@ -127,18 +131,11 @@ class classification(object):
 
             elif work == 'val':
                 with torch.no_grad():
-                    encoderBlock, bottleNeck = self.encoder(data)
-                    diffusedImage, _ = self.decoder(blocks=encoderBlock, bottleNeck=bottleNeck)   
+                    diffusedImage = self.diffuseData(data, epoch)
 
-                    if self.diffusion == 'anisotropic':
-                        regularization = self.loss.tv(diffusedImage)
-                    elif self.diffusion == 'isotropic':
-                        regularization = self.loss.laplace(diffusedImage)
+                    classScore, _ = self.classifier(diffusedImage)
 
-                    fidelity = self.mseCriterion(data, diffusedImage)
-                    regularization = self.diffusionCoeff * regularization
-
-                    loss = fidelity + regularization
+                    loss = self.crossCriterion(classScore, target)
 
             lossList.append(loss.item())
 
@@ -157,19 +154,18 @@ class classification(object):
             self.val_loss.append([])
        
         self.build_model()
-        
-        # visualize initialize data
-        # self.plot.plotResult(epoch=0, trainResult=None, valResult=None)
 
+        self.plot.plotResult(epoch=0, trainResult=None, valResult=None)
+        
         for epoch in range(1, self.nEpochs + 1):
             print("\n===> Epoch {} starts:".format(epoch))
 
             trainResult = self.run(epoch, self.train_loader, 'train')
             valResult = self.run(epoch, self.val_loader, 'val')
 
-            for i in range(4):
+            for i in range(3):
                 self.train_loss[i].append(trainResult[i])
-                # self.val_loss[i].append(valResult[i])
+                self.val_loss[i].append(valResult[i])
 
             if epoch % self.log_interval == 0 or epoch == 1:
                 self.plot.plotResult(epoch, self.train_loss, self.val_loss)

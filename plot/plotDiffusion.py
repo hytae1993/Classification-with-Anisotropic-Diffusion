@@ -103,7 +103,7 @@ class diffusionPlot:
                 trainPic1.savefig(os.path.join(trainPicPath + '/result_{}.png'.format(epoch)))
 
             # visualize validation data
-            valPicPath = os.path.join(path, 'pic/train')
+            valPicPath = os.path.join(path, 'pic/val')
             trainPic2 = self.visualize_stn(self.val_loader)
             try:
                 trainPic2.savefig(os.path.join(valPicPath + '/result_{}.png'.format(epoch)))
