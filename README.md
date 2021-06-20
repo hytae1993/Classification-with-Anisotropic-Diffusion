@@ -36,7 +36,7 @@ Run the main.py with
 python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=diffusion --diffusion=isotropic --dc=0.001
 ```
 ## Classification procee
-For classifier, we use ```vgg16, vgg16_bn, vgg19, vgg19_bn, ResNet18, ResNet50```. ```bn means batch normalization```
+For classifier, we use ```vgg16, vgg16_bn, vgg19, vgg19_bn, ResNet18, ResNet34```. ```bn means batch normalization```
 
 Specify the classifier with ``` --classifier=vgg16 ```.
 ### 1. Classify the anisotropic diffused image
