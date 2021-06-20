@@ -19,7 +19,7 @@ def get_diffused_image(input, encoder, decoder):
 
 def save_diffusion_model(encoder, decoder, config):
     path = './savedModel/'
-    aniso_path = os.path.join(path, config.diffusion, str(config.diffusionCoeff))
+    aniso_path = os.path.join(path, config.diffusion + '/diffusion_coefficient_' + str(config.diffusionCoeff))
     try: 
         torch.save(encoder.state_dict(), os.path.join(aniso_path, 'encoder'))
         torch.save(decoder.state_dict(), os.path.join(aniso_path, 'decoder'))

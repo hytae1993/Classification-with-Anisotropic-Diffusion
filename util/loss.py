@@ -28,11 +28,11 @@ class Loss:
         '''
         x_forward = image[:,:,1:,:] - image[:,:,:-1,:]
         x_backward = image[:,:,:-1,:] - image[:,:,1:,:]
-        x_loss = torch.mean(x_forward - x_backward)
+        x_loss = torch.mean(torch.abs(x_forward - x_backward))
 
         y_forward = image[:,:,:,1:] - image[:,:,:,:-1]
         y_backward = image[:,:,:,:-1] - image[:,:,:,1:]
-        y_loss = torch.mean(y_forward - y_backward)
+        y_loss = torch.mean(torch.abs(y_forward - y_backward))
 
         return (x_loss + y_loss)
 

@@ -169,7 +169,5 @@ class diffusor(object):
 
             if epoch == self.nEpochs:
                 self.plot.plotResult(epoch, self.train_loss, self.val_loss)
-                # saveModel(self.encoder, self.maskDecoder, self.config)
-
-        save_diffusion_model(self.encoder, self.decoder, self.config)
+                save_diffusion_model(self.encoder, self.decoder, self.config)
 
