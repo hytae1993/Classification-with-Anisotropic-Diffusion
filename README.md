@@ -19,4 +19,3 @@ The change in classification with the change of the diffusion coefficient of ani
 2. The kernels are Gaussian Kernel.
 3. The Kernels change every epoch. 
 4. The kernels' std become smaller as learning progresses. (The kernels' size become smaller.)
-5. 
