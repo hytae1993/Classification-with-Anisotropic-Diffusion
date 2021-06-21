@@ -55,3 +55,6 @@ python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classifica
 ```
 python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=original --classifier=vgg16 --num_classes=10
 ```
+## Some Results
+### Cam of the original image
+![image](https://user-images.githubusercontent.com/32087995/122704440-b479c400-d28e-11eb-8fa3-e806981afd6e.png)
