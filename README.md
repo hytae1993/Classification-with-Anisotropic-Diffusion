@@ -2,7 +2,7 @@
 The change in classification with the change of the diffusion coefficient of anisotropic diffusion and isotropic diffusion.
 
 
-## Requirements
+### Requirements
 Require torch, kornia, skimage
 
 In Linux os 
@@ -11,19 +11,19 @@ pytorch        -> pip3 install torch torchvision
 
 kornia,skimage -> pip3 install kornia scikit-image
 
-## Change repository to your own address
+### Change repository to your own address
 
 /main.py 
 
-: line 63, 64 '../../../dataset/stl10'  
+: line 63, 64 '../../../dataset/stl10' -> 'own address'    
 
 /plot/plotClassification.py 
 
-: line 116, 118 '../../../result/classification' 
+: line 116, 118 '../../../result/classification' -> 'own address'
 
 /plot/plotDiffusion.py
 
-: line 93 '../../../result/diffusion' 
+: line 93 '../../../result/diffusion' -> 'own address'
 
 
 ## Anisotropic Diffusion VS Isotropic Diffusion VS Original
