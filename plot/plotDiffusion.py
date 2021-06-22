@@ -35,7 +35,7 @@ class diffusionPlot:
             data = data[:16]
             input_tensor = data.cpu()
 
-            diffusedImage = get_diffused_image(data, self.encoder, self.decoder)
+            diffusedImage = get_diffused_image(data, self.encoder, self.decoder, self.config)
 
             in_grid = self.convert_image_np(
                 torchvision.utils.make_grid(input_tensor, nrow=4), False)

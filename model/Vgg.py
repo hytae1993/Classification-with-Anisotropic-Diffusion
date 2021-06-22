@@ -104,17 +104,17 @@ class upsample(nn.Module):
         self.skip = skip
         self.concat = concat
 
-        self.up = nn.Sequential(
-            nn.ConvTranspose2d(in_size, out_size, kernel_size=2, stride=2, bias=False),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.BatchNorm2d(out_size),
-        )
         # self.up = nn.Sequential(
-        #         nn.Upsample(mode='bilinear', scale_factor=2, align_corners=False),   # size up to specific
-        #         nn.Conv2d(in_size, out_size, kernel_size=1),    # size maintain
-        #         nn.LeakyReLU(0.2, inplace=True),
-        #         nn.BatchNorm2d(out_size),
-        #     )
+        #     nn.ConvTranspose2d(in_size, out_size, kernel_size=2, stride=2, bias=False),
+        #     nn.LeakyReLU(0.2, inplace=True),
+        #     nn.BatchNorm2d(out_size),
+        # )
+        self.up = nn.Sequential(
+                nn.Upsample(mode='bilinear', scale_factor=2, align_corners=False),   # size up to specific
+                nn.Conv2d(in_size, out_size, kernel_size=1),    # size maintain
+                nn.LeakyReLU(0.2, inplace=True),
+                nn.BatchNorm2d(out_size),
+            )
 
         if concat == True:
             self.conv_block = convBlock(in_size, out_size, padding, batch_norm)

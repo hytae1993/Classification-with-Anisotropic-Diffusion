@@ -8,7 +8,7 @@ from skimage.util.dtype import img_as_float
 
 from util.gaussian_smoothing import *
 
-def get_diffused_image(input, encoder, decoder, config=None, epoch=None):
+def get_diffused_image(input, encoder, decoder, config, epoch=None):
     """
     Get the mask
     :param input: input image
@@ -56,9 +56,9 @@ def get_cam(input, target, classifier):
         target_cam = list()
         for i in range(len(input)):
             overlay = params[-2][int(predicted[i])].matmul(feature[i].reshape(512,49)).reshape(7,7).cpu().data.numpy()
+            overlay = overlay.astype('float64')
             overlay = overlay - np.min(overlay)
             overlay = overlay / (np.max(overlay) - np.min(overlay))
-            overlay = img_as_float(overlay)
             overlay = skimage.transform.resize(overlay, [224,224])
             overlay = FT.to_tensor(overlay)
             predict_cam.append(overlay)
@@ -66,7 +66,6 @@ def get_cam(input, target, classifier):
             overlay = params[-2][int(target[i])].matmul(feature[i].reshape(512,49)).reshape(7,7).cpu().data.numpy()
             overlay = overlay - np.min(overlay)
             overlay = overlay / (np.max(overlay) - np.min(overlay))
-            overlay = img_as_float(overlay)
             overlay = skimage.transform.resize(overlay, [224,224])
             overlay = FT.to_tensor(overlay)
             target_cam.append(overlay)
