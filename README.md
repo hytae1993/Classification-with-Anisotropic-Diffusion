@@ -68,13 +68,16 @@ python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classifica
 ```
 ### 2. Classify the isotropic diffused image
 ```--kernel_size``` is for the gaussian kernel size of the gaussian smoothing.
+
 ```--std``` is for the standard deviation of the gaussain smoothing.
 ```
 python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=isotropic --kernel_size=7 --std=5 --classifier=vgg16 --num_classes=10
 ```
 ### 3. Classify the diffused image with annealing diffusion coefficient
 ```--kernel_size``` is for the gaussian kernel size of the gaussian smoothing at the first epoch.
+
 ```--std``` is for the standard deviation of the gaussain smoothing at the first epoch.
+
 The last input image of training, is the original image. And, at inference time, the original image is used.
 ```
 python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=annealing --kernel_size=111 --std=60 --classifier=vgg16 --num_classes=10
