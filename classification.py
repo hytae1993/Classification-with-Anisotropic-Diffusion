@@ -142,7 +142,10 @@ class classification(object):
 
             elif work == 'val':
                 with torch.no_grad():
-                    diffusedImage = self.diffuseData(data, epoch)
+                    if self.config.diffusion == 'annealing':
+                        diffusedImage = data
+                    else:
+                        diffusedImage = self.diffuseData(data, epoch)
 
                     classScore, _ = self.classifier(diffusedImage)
 
