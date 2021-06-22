@@ -35,6 +35,15 @@ class Loss:
         y_loss = torch.mean(torch.abs(y_forward - y_backward))
 
         return (x_loss + y_loss)
+    
+    def iso(self, image):
+        '''
+        Loss for isotropic diffusion's regularization.
+        :param image: input image
+        :return: L2 norm of the delta image.
+        '''
+        x_loss = torch.mean(torch.norm((image[:,:,1:,:] - image[:,:,:-1,:]), p=2))
+        y_loss = torch.mean(torch.norm((image[:,:,:-1,:] - image[:,:,1:,:]), p=2))
 
-
+        return x_loss + y_loss
     

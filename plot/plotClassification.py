@@ -40,10 +40,10 @@ class classificationPlot:
             predictCamImage, targetCamImage = get_cam(data, target, self.classifier)
 
             in_grid = self.convert_image_np(
-                torchvision.utils.make_grid(input_tensor, nrow=4), True)
+                torchvision.utils.make_grid(input_tensor, nrow=4), False)
             
             diffused_grid = self.convert_image_np(
-                torchvision.utils.make_grid(diffusedImage, nrow=4), True)
+                torchvision.utils.make_grid(diffusedImage, nrow=4), False)
 
             predict_cam_grid = self.convert_image_np(
                 torchvision.utils.make_grid(predictCamImage, nrow=4), False)

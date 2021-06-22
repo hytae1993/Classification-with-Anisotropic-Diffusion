@@ -34,6 +34,8 @@ parser.add_argument('--diffusion', type=str, default='anisotropic', help='which 
 parser.add_argument('--diffusionCoeff', '--dc', type=float, default=0.001, help='diffusion coefficient')
 parser.add_argument('--classifier', type=str, default='ResNet18', help='which classifier')
 parser.add_argument('--num_classes', type=int, default=10, help='number of classes')
+parser.add_argument('--kernel_size', type=int, default=11, help='kernel size for gaussian kernel')
+parser.add_argument('--std', type=float, default=10.5, help='std for gaussian kernel')
 parser.add_argument('--title', type=str, default='anisotropic_diffusion')
 
 args = parser.parse_args()

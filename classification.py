@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import os
 import math
+from numpy.lib.function_base import select
 
 import torch
 import torch.backends.cudnn as cudnn
@@ -17,8 +18,8 @@ from model.resNetClassifier import ResNet18, ResNet34
 from util.loss import Loss
 from util.progress_bar import progress_bar
 from util.scheduler_learning_rate import *
+from util.gaussian_smoothing import *
 from util.utils import *
-import kornia
 
 import numpy as np
 
@@ -55,7 +56,7 @@ class classification(object):
 
     def build_model(self):
         path = os.path.join('./savedModel/', self.config.diffusion+ '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
-        if self.config.diffusion == 'anisotropic' or self.config.diffusion == 'isotropic':
+        if self.config.diffusion == 'anisotropic':
             self.encoder = Encoder()
             self.decoder = Decoder(last=3, skip=True, concat=True)
             self.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder')))
@@ -84,16 +85,26 @@ class classification(object):
         self.optimizer['classifier'] = torch.optim.SGD(self.classifier.parameters(), lr=self.lr, weight_decay=1e-4)
 
     def diffuseData(self, data, epoch):
-        # if using diffused image with constant diffused image
-        if self.config.diffusion == 'anisotropic' or self.config.diffusion == 'isotropic':
+        # if using diffused image with constant anisotropic diffused image
+        if self.config.diffusion == 'anisotropic':
             encoderBlock, bottleNeck = self.encoder(data)
             diffusedImage, _ = self.decoder(blocks=encoderBlock, bottleNeck=bottleNeck)  
+        
+        elif self.config.diffusion == 'isotropic':
+            kernel = gaussian_Smoothing(self.config.kernel_size, self.config.std)
+            diffusedImage = kernel.smoothing(data, self.config.kernel_size, self.config.std)
 
-        # if using diffused image with annealing diffusion coefficient
+        # if using diffused image with annealing isotropic diffusion coefficient
         elif self.config.diffusion == 'annealing':
             with torch.no_grad():
-                diffusedImage = kornia.gaussian_blur2d(data, kernel_size=(3,3), sigma=(1,1))
-        
+                # The diffusedImage of the last epoch must be same as the input image
+                if epoch == self.nEpochs:
+                    diffusedImage = data
+                else:
+                    kernel = gaussian_Smoothing(self.config.kernel_size, self.config.std)
+                    kernel_size, std = kernel.annealing(epoch, self.nEpochs)
+                    diffusedImage = kernel.smoothing(data, kernel_size, std)
+
         # if using original image
         elif self.config.diffusion == 'original':
             diffusedImage = data

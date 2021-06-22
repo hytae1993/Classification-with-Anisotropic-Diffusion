@@ -38,10 +38,10 @@ class diffusionPlot:
             diffusedImage = get_diffused_image(data, self.encoder, self.decoder)
 
             in_grid = self.convert_image_np(
-                torchvision.utils.make_grid(input_tensor, nrow=4), True)
+                torchvision.utils.make_grid(input_tensor, nrow=4), False)
             
             diffused_grid = self.convert_image_np(
-                torchvision.utils.make_grid(diffusedImage, nrow=4), True)
+                torchvision.utils.make_grid(diffusedImage, nrow=4), False)
             
             plt.close('all')
             fig = plt.figure(figsize=(18,8))
@@ -90,7 +90,7 @@ class diffusionPlot:
         return figure
 
     def plotResult(self, epoch, trainResult, valResult):
-        path = os.path.join('../../../result/diffusion', self.config.diffusion + '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
+        path = os.path.join('../../../result/diffusion/concatSkip', self.config.diffusion + '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
 
         if epoch != 0: 
             # visualize train data
