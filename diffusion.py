@@ -106,7 +106,7 @@ class diffusor(object):
                 if self.diffusion == 'anisotropic':
                     regularization = self.loss.tv(diffusedImage)
                 elif self.diffusion == 'isotropic':
-                    regularization = self.loss.laplace(diffusedImage)
+                    regularization = self.loss.iso(diffusedImage)
 
                 fidelity = self.mseCriterion(data, diffusedImage)
                 regularization = self.diffusionCoeff * regularization
@@ -127,7 +127,7 @@ class diffusor(object):
                     if self.diffusion == 'anisotropic':
                         regularization = self.loss.tv(diffusedImage)
                     elif self.diffusion == 'isotropic':
-                        regularization = self.loss.laplace(diffusedImage)
+                        regularization = self.loss.iso(diffusedImage)
 
                     fidelity = self.mseCriterion(data, diffusedImage)
                     regularization = self.diffusionCoeff * regularization
