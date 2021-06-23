@@ -88,6 +88,7 @@ python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classifica
 ```
 ## Some Results
 ### Anisotropic diffusioned image
+![image](https://user-images.githubusercontent.com/32087995/123083340-ec356700-d45a-11eb-8018-69892caaee87.png)
 
 ### Isotropic diffusioned image
 More blurred with big size kernel and large value of standard deviation.
