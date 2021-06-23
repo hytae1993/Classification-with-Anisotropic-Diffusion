@@ -171,8 +171,11 @@ class classification(object):
 
         self.plot.plotResult(epoch=0, trainResult=None, valResult=None)
         
+        # if you want to change the learning rate to double sigmoid, erase the annotation line 175, 178
+        # scheduler = scheduler_learning_rate_sigmoid_double(self.optimizer, self.nEpochs, [0.01, 0.1], [0.1, 0.00001], [10, 10], [0,0])
         for epoch in range(1, self.nEpochs + 1):
             print("\n===> Epoch {} starts:".format(epoch))
+            # scheduler.step()
 
             trainResult = self.run(epoch, self.train_loader, 'train')
             valResult = self.run(epoch, self.val_loader, 'val')
