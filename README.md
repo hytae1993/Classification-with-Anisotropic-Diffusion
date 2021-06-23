@@ -84,7 +84,7 @@ python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classifica
 ```
 ### 4. Classify the original image
 ```
-python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=original --classifier=vgg16 --num_classes=10
+python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=original --classifier=vgg16 --num_classes=10 --decay=1e-4
 ```
 ## Some Results
 ### Anisotropic diffusioned image
