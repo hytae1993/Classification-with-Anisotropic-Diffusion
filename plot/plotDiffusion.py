@@ -90,7 +90,7 @@ class diffusionPlot:
         return figure
 
     def plotResult(self, epoch, trainResult, valResult):
-        path = os.path.join('../../../result/diffusion/concatSkip', self.config.diffusion + '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
+        path = os.path.join('../../../result/diffusion/addSkip', self.config.diffusion + '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
 
         if epoch != 0: 
             # visualize train data
