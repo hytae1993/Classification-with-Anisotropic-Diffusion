@@ -55,10 +55,10 @@ class classification(object):
         self.val_loss = []
 
     def build_model(self):
-        path = os.path.join('./savedModel/', self.config.diffusion+ '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
+        path = os.path.join('./savedModel/addSkip', self.config.diffusion+ '/diffusion_coefficient_' + str(self.config.diffusionCoeff))
         if self.config.diffusion == 'anisotropic':
             self.encoder = Encoder()
-            self.decoder = Decoder(last=3, skip=True, concat=True)
+            self.decoder = Decoder(last=3, skip=True, concat=False)
             self.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder')))
             self.decoder.load_state_dict(torch.load(os.path.join(path, 'decoder')))
 
@@ -82,7 +82,7 @@ class classification(object):
 
         self.plot = classificationPlot(self.train_loader, self.val_loader, self.encoder, self.decoder, self.classifier, self.device, self.config)
         self.crossCriterion = torch.nn.CrossEntropyLoss().to(self.device)
-        self.optimizer['classifier'] = torch.optim.SGD(self.classifier.parameters(), lr=self.lr, weight_decay=1e-4)
+        self.optimizer['classifier'] = torch.optim.SGD(self.classifier.parameters(), lr=self.lr, weight_decay=self.config.decay)
 
     def diffuseData(self, data, epoch):
         # if using diffused image with constant anisotropic diffused image
@@ -187,4 +187,5 @@ class classification(object):
             if epoch == self.nEpochs:
                 self.plot.plotResult(epoch, self.train_loss, self.val_loss)
                 # save_diffusion_model(self.encoder, self.decoder, self.config)
+                saveExcelClass(self.train_loss, self.val_loss, self.config)
 
