@@ -59,7 +59,7 @@ class diffusor(object):
 
     def build_model(self):
         self.encoder = Encoder()
-        self.decoder = Decoder(last=3, skip=True, concat=True)     # concat=False면 add connection, skip=False면 no skip 
+        self.decoder = Decoder(last=3, skip=True, concat=False)     # concat=False면 add connection, skip=False면 no skip 
 
         self.encoder = self.encoder.to(self.device)
         self.decoder = self.decoder.to(self.device)

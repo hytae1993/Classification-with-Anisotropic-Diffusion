@@ -36,12 +36,12 @@ class gaussian_Smoothing():
 
 
 if __name__ == "__main__":
-    kernel_size = (25,25)
-    std = (100, 100)
+    kernel_size = 3
+    std = 100
     test = gaussian_Smoothing(kernel_size, std)
 
     # set your testing image directory
-    path = '../../../../dataset/dogcat/train/cat/cat.3.jpg'
+    path = '../exampleImage/original.png'
     image = PIL.Image.open(path)
     data = transforms.ToTensor()(image)
     data = data.unsqueeze(dim=0)
@@ -62,6 +62,6 @@ if __name__ == "__main__":
     axs[1].set_title('image blurred')
     axs[1].imshow(blur)
 
-    plt.savefig('gaussian blurred.png')
+    plt.savefig('../exampleImage/gaussian blurred_{}.png'.format(kernel_size))
 
     # print(kernel)
