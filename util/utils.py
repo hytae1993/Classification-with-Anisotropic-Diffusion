@@ -5,6 +5,7 @@ import torchvision.transforms.functional as FT
 import matplotlib.pyplot as plt
 import skimage.transform
 from skimage.util.dtype import img_as_float
+import pandas as pd
 
 from util.gaussian_smoothing import *
 
@@ -84,3 +85,24 @@ def save_diffusion_model(encoder, decoder, config):
         os.makedirs(aniso_path)
         torch.save(encoder.state_dict(), os.path.join(aniso_path, 'encoder'))
         torch.save(decoder.state_dict(), os.path.join(aniso_path, 'decoder'))
+
+def saveExcelClass(trainResult, valResult, config):
+    trainResult = np.transpose(trainResult)
+    train_df = pd.DataFrame(trainResult, columns=['total loss mean', 'total loss std', 'accuracy'])
+
+    valResult = np.transpose(valResult)
+    val_df = pd.DataFrame(valResult, columns=['total loss mean', 'total loss std', 'accuracy'])
+
+    path = './excel/'
+    if config.diffusion != 'original':
+        path = os.path.join(path, config.diffusion + '/diffusion_coefficient_' + str(config.diffusionCoeff))
+    else:
+        path = os.path.join(path, config.diffusion)
+
+    try:
+        train_df.to_csv(os.path.join(path + '/trainLoss.csv'))
+        val_df.to_csv(os.path.join(path + 'valLoss.csv'))
+    except FileNotFoundError:
+        os.makedirs(path)
+        train_df.to_csv(os.path.join(path + '/trainLoss.csv'))
+        val_df.to_csv(os.path.join(path + '/valLoss.csv'))
