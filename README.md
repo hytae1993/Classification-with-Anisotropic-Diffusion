@@ -64,7 +64,7 @@ For classifier, we use ```vgg16, vgg16_bn, vgg19, vgg19_bn, ResNet18, ResNet34``
 Specify the classifier with ``` --classifier=vgg16 ```.
 ### 1. Classify the anisotropic diffused image
 ```
-python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=anisotropic --classifier=vgg16 --num_classes=10
+python3 main.py --epoch=100 --gpu=0 --batchSize=16 --lr=0.001 --model=classification --diffusion=anisotropic --classifier=vgg16 --num_classes=10 --diffusionCoeff=0.1
 ```
 ### 2. Classify the isotropic diffused image
 ```--kernel_size``` is for the gaussian kernel size of the gaussian smoothing.
