@@ -101,6 +101,7 @@ More blurred with big size kernel and large value of standard deviation.
 
 ### Cam of the original images and diffused images
 aniso_k: anisotropic diffusion with k-value of the diffusion coefficient
+
 iso_m: isotropic diffusion with m-size of the kernel size for the gaussian noise
 
 ![image](https://user-images.githubusercontent.com/32087995/134683184-c2f40fb5-a1fe-42a7-b13a-0d91867a9b60.png)
