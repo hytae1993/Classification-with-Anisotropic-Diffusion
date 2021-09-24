@@ -97,3 +97,16 @@ More blurred with big size kernel and large value of standard deviation.
 
 ### Cam of the original images
 ![image](https://user-images.githubusercontent.com/32087995/122704440-b479c400-d28e-11eb-8fa3-e806981afd6e.png)
+
+
+### Cam of the original images and diffused images
+aniso_k: anisotropic diffusion with k-value of the diffusion coefficient
+iso_m: isotropic diffusion with m-size of the kernel size for the gaussian noise
+![image](https://user-images.githubusercontent.com/32087995/134683184-c2f40fb5-a1fe-42a7-b13a-0d91867a9b60.png)
+
+
+### Classification accuracy of each diffusion process
+![image](https://user-images.githubusercontent.com/32087995/134683250-f5d3b1e2-0b3f-43ed-ad65-df2cd13ae5de.png)
+It means that anisotropic diffusion can get similar classification accuracy of original images, because anisotropic diffusion preserve the important information of the objects. But, isotropic diffusion cannot preserve the information of the objects, so the classification accuracies are lower than original images and aniostropic diffused images.
+
+
